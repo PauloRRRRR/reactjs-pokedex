@@ -8,13 +8,15 @@ import Searchbar from './components/Searchbar';
 function App() {
 
   const [loading, setLoading] = useState(false);
-  const [page, setpage] = useState([]);
   const [pokemons, setPokemons] = useState([]);
 
   const fetchPokemons = async () => {
     try {
       setLoading(true);
-      const result = await getPokemons();
+      const data = await getPokemons();
+      const promises = data.results.map(async(pokemon) => {
+        return await getPokemons();
+      })
       setPokemons(result);
       setLoading(false);
     } catch (error) {
@@ -25,14 +27,14 @@ function App() {
   useEffect(() => {
     console.log("carregou")
     fetchPokemons();
-  }, [pokemons])
+  }, [])
 
   return (
 
     <div>
       <Navbar/>
       <Searchbar/>
-      <Pokedex pokemons={pokemons} loading={loading}/>
+      <Pokedex pokemons={pokemons.results} loading={loading}/>
     </div>
   );
 }
